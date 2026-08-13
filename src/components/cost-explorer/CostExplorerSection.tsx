@@ -28,6 +28,7 @@ import Breadcrumb from "@/components/cost-explorer/Breadcrumb";
 import Badge from "@/components/cost-explorer/Badge";
 import { StatChipsRow } from "@/components/cost-explorer/StatChip";
 import GradientWave from "@/components/cost-explorer/GradientWave";
+import StarBorder from "@/components/ui/StarBorder";
 import LoadingState from "@/components/cost-explorer/LoadingState";
 import ErrorState from "@/components/cost-explorer/ErrorState";
 import { formatCurrency, prettifyCategory } from "@/lib/transform";
@@ -99,15 +100,15 @@ export default function CostExplorerSection() {
   const barItems =
     drillState.level === "clusters"
       ? (clusters ?? []).map((c) => ({
-          id: c.category,
-          label: c.category,
-          value: c.totalCost,
-        }))
+        id: c.category,
+        label: c.category,
+        value: c.totalCost,
+      }))
       : (drillState.activeCluster?.services ?? []).map((s) => ({
-          id: String(s.id),
-          label: s.name,
-          value: s.totalCost,
-        }));
+        id: String(s.id),
+        label: s.name,
+        value: s.totalCost,
+      }));
 
   /* ── Animation variants for level transitions ── */
   const levelVariants = {
@@ -335,24 +336,30 @@ export default function CostExplorerSection() {
                     ) : null}
                   </div>
 
-                  {/* Deliberate interpretation note */}
-                  <p
-                    style={{
-                      fontSize: "var(--text-xs)",
-                      color: "var(--color-text-muted)",
-                      marginBlockStart: "var(--space-6)",
-                      paddingBlockStart: "var(--space-4)",
-                      borderBlockStart:
-                        "1px solid color-mix(in srgb, var(--color-bg-card-border) 50%, transparent)",
-                      lineHeight: 1.5,
-                    }}
+                  {/* Deliberate interpretation note — wrapped in animated star border */}
+                  <StarBorder
+                    borderWidth={1.5}
+                    radius="var(--radius-lg)"
+                    speed={6}
+                    style={{ marginBlockStart: "var(--space-6)" }}
                   >
-                    <strong>Note:</strong> Cost breakdown (Compute 40% / Memory
-                    35% / Other 25%) is a deliberate interpretation derived from
-                    each product&apos;s total price. The source API
-                    (dummyjson.com) provides only a single price per item — the
-                    split models a typical compute-heavy cloud workload.
-                  </p>
+                    <p
+                      style={{
+                        fontSize: "var(--text-xs)",
+                        color: "var(--color-text-muted)",
+                        padding: "var(--space-4)",
+                        lineHeight: 1.6,
+                        margin: 0,
+                      }}
+                    >
+                      <strong style={{ color: "var(--color-accent-bright)" }}>Note:</strong>{" "}
+                      Cost breakdown (Compute 40% / Memory 35% / Other 25%) is a
+                      deliberate interpretation derived from each product&apos;s total
+                      price. The source API (dummyjson.com) provides only a single
+                      price per item — the split models a typical compute-heavy cloud
+                      workload.
+                    </p>
+                  </StarBorder>
                 </motion.div>
               </AnimatePresence>
             </>

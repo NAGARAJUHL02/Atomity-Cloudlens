@@ -16,6 +16,7 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import Providers from "@/app/providers";
+import ShapeGrid from "@/components/ui/ShapeGrid";
 import "@/app/globals.css";
 
 const inter = Inter({
@@ -44,6 +45,8 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
       <body>
+        {/* Fixed shape-grid canvas — line grid with glowing intersection dots */}
+        <ShapeGrid />
         <Providers>{children}</Providers>
       </body>
     </html>

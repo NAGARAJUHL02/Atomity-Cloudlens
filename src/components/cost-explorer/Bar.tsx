@@ -129,14 +129,22 @@ export default function Bar({
               : undefined
           }
           aria-label={ariaLabel}
+          className="bar-el"
           style={{
             width: "100%",
             borderRadius: "var(--radius-md) var(--radius-md) 0 0",
             background: gradients.bar,
-            border: "none",
+            /* Electric border — thin line matching the emerald gradient */
+            border: "1px solid rgba(52, 211, 153, 0.55)",
+            /* Layered glow: inner soft bloom + outer electric halo */
+            boxShadow: [
+              "0 0 0 1px rgba(52,211,153,0.08)",        /* hairline ring   */
+              "0 0 6px 1px rgba(52,211,153,0.35)",      /* inner glow      */
+              "0 0 14px 3px rgba(34,211,238,0.18)",     /* outer cyan halo */
+            ].join(", "),
             cursor: isClickable ? "pointer" : "default",
             position: "relative",
-            overflow: "hidden",
+            overflow: "visible",
             outline: "none",
             padding: 0,
             minHeight: "8px",
@@ -153,11 +161,55 @@ export default function Bar({
               opacity: 0,
               transition: "opacity var(--duration-fast)",
               pointerEvents: "none",
+              borderRadius: "inherit",
             }}
             className="bar-shimmer"
           />
         </motion.button>
       </div>
+
+      {/* ── Scoped electric-border styles ── */}
+      <style>{`
+        /* Idle pulse: glow breathes gently */
+        .bar-el {
+          animation: bar-glow-pulse 3s ease-in-out infinite alternate;
+        }
+        @keyframes bar-glow-pulse {
+          0% {
+            box-shadow:
+              0 0 0 1px rgba(52,211,153,0.06),
+              0 0 5px 1px rgba(52,211,153,0.28),
+              0 0 12px 2px rgba(34,211,238,0.12);
+          }
+          100% {
+            box-shadow:
+              0 0 0 1px rgba(52,211,153,0.12),
+              0 0 9px 2px rgba(52,211,153,0.48),
+              0 0 20px 5px rgba(34,211,238,0.22);
+          }
+        }
+
+        /* Hover / focus: fully lit electric border */
+        .bar-el:hover,
+        .bar-el:focus-visible {
+          border-color: rgba(110, 231, 183, 0.85) !important;
+          box-shadow:
+            0 0 0 1px rgba(52,211,153,0.25),
+            0 0 10px 3px rgba(52,211,153,0.65),
+            0 0 28px 8px rgba(34,211,238,0.30),
+            0 0 50px 14px rgba(34,211,238,0.10) !important;
+          animation-play-state: paused;
+        }
+        .bar-el:hover .bar-shimmer,
+        .bar-el:focus-visible .bar-shimmer {
+          opacity: 1 !important;
+        }
+
+        /* Freeze pulse for reduced-motion users */
+        @media (prefers-reduced-motion: reduce) {
+          .bar-el { animation-play-state: paused !important; }
+        }
+      `}</style>
 
       {/* Category label below the bar */}
       <motion.span
